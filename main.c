@@ -2,7 +2,7 @@
 #include <inttypes.h>
 #include <time.h>
 #ifndef DEBUG
-#define DEBUG
+//#define DEBUG
 
 uint32_t cache_read(uintptr_t addr);
 uint32_t mem_uncache_read(uintptr_t addr);
@@ -46,13 +46,17 @@ void random_trace(void) {
 		// printf("loop %d\n", i);
 #endif
 		if (is_read) {
+			if (i == 48)
+				printf("here");
 			uint32_t ret = cpu_read(addr, len);
 			uint32_t ret_uncache = cpu_uncache_read(addr, len);
 #ifdef DEBUG
-			printf("read %d \t len : %d \t addr: %x \n", i , len ,(u_int16_t)addr);
-			printf("cache_ret %x \t uncache_ret %x \n", cache_read(addr),mem_uncache_read(addr));
+			if (ret != ret_uncache){
+				printf("read %d \t len : %d \t addr: %x \n", i , len ,(u_int16_t)addr);
+				printf("cache_ret %x \t uncache_ret %x \n", cache_read(addr),mem_uncache_read(addr));
+			}
 #endif
-			assert(ret == ret_uncache);
+			 assert(ret == ret_uncache);
 		}
 		else {
 #ifdef DEBUG
@@ -88,7 +92,7 @@ int main(int argc, char *argv[]) {
 		seed = time(0);
 	}
 
-	init_rand(seed);
+	 init_rand(seed);
 	init_mem();
 
 	init_cache(14, 2);
